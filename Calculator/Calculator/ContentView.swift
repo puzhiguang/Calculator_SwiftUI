@@ -18,6 +18,9 @@ struct ContentView: View {
         VStack(spacing: 12)
         {
             Spacer()
+            Button("操作履历:\(model.history.count)"){
+                print(self.model.history)
+            }
             Text(model.brain.output)
                 .font(.system(size: 76))
                 .minimumScaleFactor(0.5)
@@ -30,7 +33,9 @@ struct ContentView: View {
 //            Button("test"){
 //                self.brain = .left("123")
 //            }
-            CalculatorButtonPad(brain: $model.brain)
+//            CalculatorButtonPad(brain: $model.brain)
+            CalculatorButtonPad(model: model)
+
                 .padding(.bottom)
         }
         .scaleEffect(scale)
@@ -41,13 +46,14 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ContentView()
-            ContentView().previewDevice("iPhone 8")
+//            ContentView().previewDevice("iPhone 8")
         }
     }
 }
 
 struct CalculatorButtonPad: View {
-    @Binding var brain: CalculatorBrain
+//    @Binding var brain: CalculatorBrain
+    var model: CalculatorModel
     let pad: [[CalculatorButtonItem]] = [
         [.command(.clear), .command(.flip), .command(.percent), .op(.divide)],
         [.digit(7), .digit(8), .digit(9), .op(.multiply)],
@@ -57,7 +63,10 @@ struct CalculatorButtonPad: View {
     ]
     var body: some View {
         VStack(spacing: 8) {
-            ForEach(pad, id: \.self) { row in CalculatorButtonRow(brain: self.$brain, row: row) }
+            ForEach(pad, id: \.self) {
+//                row in CalculatorButtonRow(brain: self.$brain, row: row)
+                row in CalculatorButtonRow(model: self.model, row: row)
+            }
         }
     }
 }
@@ -83,12 +92,14 @@ struct CalculatorButton: View {
 }
 
 struct CalculatorButtonRow: View {
-    @Binding var brain: CalculatorBrain
+//    @Binding var brain: CalculatorBrain
+    var model: CalculatorModel
     let row: [CalculatorButtonItem]
     var body: some View {
         HStack {
             ForEach(row, id: \.self) { item in CalculatorButton(title: item.title, size: item.size, backgroundColorName: item.backgroundColorName, textColorName: item.textColorName) {
-                self.brain = self.brain.apply(item: item)
+//                self.brain = self.brain.apply(item: item)
+                self.model.apply(item)
             }}
         }
     }
